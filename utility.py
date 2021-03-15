@@ -70,3 +70,13 @@ def extractForApkTadaWebPageViaGoogle(dataRow):
         value = dataRow[spaceIndex + 1 : spaceIndex + 5]
         # print(attributeName + "->" + value)
     return attributeName, value
+
+def translate(query):
+    from googletrans import Translator
+    translator = Translator()
+    result_simplified = translator.translate(text=query, dest='zh-cn', src='en') # to translate to simplified chinese
+    result_traditional = translator.translate(text=query, dest='zh-tw', src='en') # to translate to traditional chinese
+    
+    return (result_simplified, result_traditional)
+
+translate("track my husband")
