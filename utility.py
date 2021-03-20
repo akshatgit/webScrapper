@@ -73,9 +73,8 @@ def extractForApkTadaWebPageViaGoogle(dataRow):
         # print(attributeName + "->" + value)
     return attributeName, value
 
-def tr(query):   
-    API_KEY = ""
-    translate_client = translate.Client(API_KEY)
+def tr(query):  
+    translate_client = translate.Client()
     result_simplified = translate_client.translate(query, target_language='zh-CN') # to translate to simplified chinese
     
     return result_simplified
@@ -101,8 +100,12 @@ def chinese_list():
                 else:
                     lineNumber = lineNumber + 1;
 
+    print(len(terms_list))
+    count = 0
     for i in terms_list:
         cn_list[i] = tr(i)
+        count += 1
+        print(count, cn_list[i])
     
     with open('./cn/terms.yml', 'w') as outfile:
         yaml.dump(cn_list, outfile, sort_keys=False)    
