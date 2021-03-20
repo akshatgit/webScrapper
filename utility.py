@@ -74,7 +74,7 @@ def extractForApkTadaWebPageViaGoogle(dataRow):
     return attributeName, value
 
 def tr(query):   
-    API_KEY = "AIzaSyAMfLc6_ErRoG7cXPhMqKmz_R9D4B7paBg"
+    API_KEY = ""
     translate_client = translate.Client(API_KEY)
     result_simplified = translate_client.translate(query, target_language='zh-CN') # to translate to simplified chinese
     
