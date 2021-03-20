@@ -1,4 +1,5 @@
-# google-cloud-translate==2.0.1
+google-cloud-translate
+gcloud
 googletrans
 pyyaml
 BeautifulSoup4
