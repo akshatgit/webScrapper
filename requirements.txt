@@ -1,3 +1,4 @@
 # google-cloud-translate==2.0.1
 googletrans
+pyyaml
 BeautifulSoup4
