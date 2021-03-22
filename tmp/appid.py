@@ -14,14 +14,20 @@ def main():
     # print(len(result))
     # print(type(result))
     # print(result[0])
+    # Malavida db does not have android apps. Why?
+    
     stats = dict()
     for app in result:
         appid = app[0].split("/")[-1]
-        if len(appid) > 0:
-            if appid in stats:
-                stats[appid]+=1
-            else:
-                stats[appid] = 1
+        
+        if len(appid) == 0:
+            appid = app[0].split("/")[-2]
+
+        if appid in stats:
+            stats[appid]+=1
+        else:
+            stats[appid] = 1
+            
     sorted_stats = dict(sorted(stats.items(), key=lambda x: x[1], reverse=True))
     count = 0
     for i in stats:
