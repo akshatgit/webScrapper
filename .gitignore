@@ -1,3 +1,10 @@
 .vscode/*
 database.db
 env/*
+gcloud*.json
+test.py
+cn_database.db
+=======
+gcloud*.json
+=======
+env/*
