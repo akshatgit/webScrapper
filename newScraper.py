@@ -39,6 +39,7 @@ def countArgumentsPassed(args):
     return count
 
 dispatcher = {
+    'amazon': amazon_app,
     'apksupport': apksupport,
     'apkdl': apkdl,
     'apkpure': apkpure,

@@ -1,5 +1,7 @@
 import csv
+import yaml
 from queue import Queue
+from google.cloud import translate_v2 as translate
 
 def commaSeparated(term):
     result = ""
@@ -70,3 +72,55 @@ def extractForApkTadaWebPageViaGoogle(dataRow):
         value = dataRow[spaceIndex + 1 : spaceIndex + 5]
         # print(attributeName + "->" + value)
     return attributeName, value
+
+def tr_cn(text):  
+    translate_client = translate.Client()
+    result_simplified = translate_client.translate(text, target_language='zh-CN') # to translate to simplified Chinese
+    
+    return result_simplified
+
+def tr_en(text):  
+    translate_client = translate.Client()
+    result_simplified = translate_client.translate(text, target_language='en') # to translate to English
+    
+    return result_simplified
+
+def test_translation():
+    test_cn = tr_cn("track my husband")
+    test_en = tr_en(test_cn["translatedText"])
+    print(test_cn)
+    print(test_en)
+
+def chinese_list():
+    terms_list = []
+    cn_list = {}
+    with open('android_terms.csv','rt')as f:
+        data = csv.reader(f)
+        lineNumber = 0;
+        for row in data:
+                if lineNumber >= 1:
+                    key = row[2];
+                    terms = row[3];
+                    i = 0;
+                    for term in terms.split('"'):
+                        if i%2 == 0:
+                            i = i+1;
+                            continue
+                        else:
+                            i = i+1;
+                            terms_list.append(term)
+                else:
+                    lineNumber = lineNumber + 1;
+
+    print(len(terms_list))
+    count = 0
+    for i in terms_list:
+        cn_list[i] = tr_cn(i)
+        count += 1
+        print(count, cn_list[i])
+    
+    with open('./cn/terms.yml', 'w') as outfile:
+        yaml.dump(cn_list, outfile, sort_keys=False)    
+    
+    
+test_translation()

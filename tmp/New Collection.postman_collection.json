@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "9433ef9c-d36f-4198-a675-3d37b7347788",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://android.myapp.com/myapp/searchAjax.htm?kw=跟踪我丈夫的电话&pns=&sid=",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://android.myapp.com/myapp/searchAjax.htm?kw=跟踪我丈夫的电话&pns=&sid=",
+					"protocol": "https",
+					"host": [
+						"android",
+						"myapp",
+						"com"
+					],
+					"path": [
+						"myapp",
+						"searchAjax.htm"
+					],
+					"query": [
+						{
+							"key": "kw",
+							"value": "跟踪我丈夫的电话"
+						},
+						{
+							"key": "pns",
+							"value": ""
+						},
+						{
+							"key": "sid",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://android.myapp.com/myapp/searchAjax.htm?kw=%E8%B7%9F%E8%B8%AA%E6%88%91%E4%B8%88%E5%A4%AB%E7%9A%84%E7%94%B5%E8%AF%9D&pns=&sid=",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://android.myapp.com/myapp/searchAjax.htm?kw=%E8%B7%9F%E8%B8%AA%E6%88%91%E4%B8%88%E5%A4%AB%E7%9A%84%E7%94%B5%E8%AF%9D&pns=&sid=",
+					"protocol": "https",
+					"host": [
+						"android",
+						"myapp",
+						"com"
+					],
+					"path": [
+						"myapp",
+						"searchAjax.htm"
+					],
+					"query": [
+						{
+							"key": "kw",
+							"value": "%E8%B7%9F%E8%B8%AA%E6%88%91%E4%B8%88%E5%A4%AB%E7%9A%84%E7%94%B5%E8%AF%9D"
+						},
+						{
+							"key": "pns",
+							"value": ""
+						},
+						{
+							"key": "sid",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://zhushou.360.cn/search/index/?kw=%E8%B7%9F%E8%B8%AA%E6%88%91%E4%B8%88%E5%A4%AB%E7%9A%84%E7%94%B5%E8%AF%9D",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://zhushou.360.cn/search/index/?kw=%E8%B7%9F%E8%B8%AA%E6%88%91%E4%B8%88%E5%A4%AB%E7%9A%84%E7%94%B5%E8%AF%9D",
+					"protocol": "http",
+					"host": [
+						"zhushou",
+						"360",
+						"cn"
+					],
+					"path": [
+						"search",
+						"index",
+						""
+					],
+					"query": [
+						{
+							"key": "kw",
+							"value": "%E8%B7%9F%E8%B8%AA%E6%88%91%E4%B8%88%E5%A4%AB%E7%9A%84%E7%94%B5%E8%AF%9D"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

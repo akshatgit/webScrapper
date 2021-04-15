@@ -13,6 +13,36 @@ def apksupportTest(db, q):
 def apkdlTest(db, q):
     print("Came inside apkdlTest")
 
+def Store360(db, q):
+    test_query = "跟踪我丈夫的电话"    
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    payload = {'kw': '跟踪我丈夫的电话'}
+    url = "http://zhushou.360.cn/search/index/"
+    r = requests.get(url, params=payload, headers=headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    app_list =  = soup.find_all("li")
+    # TODO: fetch data for all apps and check if there is more results. 
+
+
+
+def tencent(db, q):
+    test_query = "跟踪我丈夫的电话"
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    # TODO: 
+    # Send Post request to https://android.myapp.com/myapp/searchAjax.htm?kw=跟踪我丈夫的电话&pns=&sid=
+    # Reply is json request
+    # Parse request and repeat till we get empty response. 
+
+
+def amazon_app(db, q):
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    payload = {'q': 'track+husband+phone', 'i': 'mobile-apps', 'ref': 'nb_sb_noss'}
+    r = requests.get('https://www.amazon.com/s', params=payload, headers=headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    soup.find_all("div", attrs={"class": "a-size-base a-link-normal a-text-normal"})
+    # TODO: 
+    # Handle flagging as bot by amazon
+
 #Failing. Use user-agent fix
 def apksupport(db, q):
     print("Starting apksupport")
