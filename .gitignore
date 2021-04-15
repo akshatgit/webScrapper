@@ -1,10 +1,10 @@
 .vscode/*
 database.db
 env/*
-<<<<<<< HEAD
 gcloud*.json
 test.py
 cn_database.db
 =======
 gcloud*.json
->>>>>>> parent of d69ecdb... no change
+=======
+env/*

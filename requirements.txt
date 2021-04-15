@@ -1,3 +1,4 @@
+
 google-cloud-translate
 gcloud
 googletrans
@@ -5,3 +6,8 @@ pyyaml
 BeautifulSoup4
 lxml
 requests
+# google-cloud-translate==2.0.1
+googletrans
+pyyaml
+BeautifulSoup4
+
