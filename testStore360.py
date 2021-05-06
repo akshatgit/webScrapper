@@ -42,6 +42,9 @@ def testStore360(db):
     appDetailsTable = getTable(db, 'appDetailsChinese')
     appIdTable = getTable(db, 'AppId')
     for term in get_query_terms():
+        #This may skip some terms if the crawler is interrupted before all results are fetched for a particular term
+        if appDetailsTable.find_one(term = term):
+            continue
         print("Sending request to Store360")
         print(tr_cn(term).get("translatedText"))
         payload = {'kw':tr_cn(term).get("translatedText")}
