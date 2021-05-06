@@ -2,8 +2,8 @@ import dataset
 from sqlalchemy.sql import text
 from collections import defaultdict
 
-def databaseStartUp():
-    db = dataset.connect("sqlite:///database.db")
+def databaseStartUp(db):
+    db = dataset.connect(db)
     print("Database set up")
     return db
 
@@ -26,6 +26,20 @@ def insertIntoAppDetailsTable(table, details):
                     table.insert(details)
                     break
 
+def insertIntoAppDetailsTableStore360(table, details):
+    row = table.find_one(appName = details['appName'])
+    if row == None:
+        # First time entry hence, insert
+        table.insert(details)
+    else:
+        # Else see if there are changes, if there are, update the same tuple
+        for key in details.keys():
+            if key != 'createdAt':
+                if row[key] == details[key]:
+                    continue
+                else:
+                    table.insert(details)
+                    break
 
 def insertIntoAppIdTable(table, details):
     row = table.find_one(word = details['word'])

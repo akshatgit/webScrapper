@@ -8,6 +8,49 @@ import re
 from bs4 import BeautifulSoup
 import bs4
 import os
+import pandas as pd
+
+
+
+def getTitleForAppID(dataframe, appID):
+    df = dataframe.loc[dataframe['AppID'] == appID , 'Title']
+    title = df.tolist()[0]
+    for k in title.split("\n"):
+        title = re.sub(r"[^a-zA-Z0-9]+", ' ', k)
+    title = title.replace(' ','-').lower()
+    return title
+
+def downloadApksFromCSV(fileName):
+    df = pd.read_csv(fileName, usecols = ['AppID','Title'])
+    appIDs = df.AppID
+    count = 0
+    for appID in appIDs:
+        try:
+            fileName = os.getcwd() + '\\APKs\\benign\\'+ appID + '.apk'
+            if os.path.exists(fileName):
+                continue
+            url1 = "https://apkplz.net/download-app/" + appID
+            r1 = requests.get(url1)
+            soup = BeautifulSoup(r1.text, 'lxml')
+            #look for 'dllink' within all script tags, strip out the value of the variable using substrings
+            download_url_untrimmed = re.search(r'dllink\s*=\s*(.*?);', str(soup.find_all('script')), flags=re.DOTALL).group(0)
+            url2 = download_url_untrimmed.split("\"")[1]
+            r = requests.get(url2)
+            open(fileName,'wb').write(r.content)
+            print("Downloaded " + fileName)
+            count += 1
+            if count == 700:
+                break
+        except Exception as e:
+            fileName = os.getcwd() + '\\APKs\\benign\\'+ "errors.txt"
+            errorMessage = "\n" + appID + " could not download" + format(e)
+            open(fileName,'a').write(errorMessage)
+            open(fileName).close()
+            print(appID+ " could not be downloaded")
+            continue
+
+
+
 
 def downloadApkpure(db,table):
     #table = getTable(db,appDetails)
@@ -20,14 +63,15 @@ def downloadApkpure(db,table):
             fileName = os.getcwd() + '\\APKs\\apkpure\\'+ appID_trimmed + '.apk'
             if os.path.exists(fileName):
                 continue
+            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
             url1 = "https://apkpure.com" + appID + "/download?from=details"
-            r1 = requests.get(url1)
+            r1 = requests.get(url1, headers = headers)
             soup = BeautifulSoup(r1.text, 'html.parser')
             url2 = soup.find(id="download_link")["href"]
             r = requests.get(url2)
             open(fileName,'wb').write(r.content)
             print("Downloaded " + fileName)
-        except Exception:
+        except Exception as e:
             fileName = os.getcwd() + '\\APKs\\apkpure\\'+ "errors.txt"
             errorMessage = "\n" + appID_trimmed + " could not download" + format(e)
             open(fileName,'a').write(errorMessage)
@@ -56,7 +100,7 @@ def downloadApkplz(db,table):
             r = requests.get(url2)
             open(fileName,'wb').write(r.content)
             print("Downloaded " + fileName)
-        except Exception:
+        except Exception as e:
             fileName = os.getcwd() + '\\APKs\\apkplz\\'+ "errors.txt"
             errorMessage = "\n" + appID_trimmed + " could not download" + format(e)
             open(fileName,'a').write(errorMessage)
@@ -86,7 +130,7 @@ def downloadApktada(db,table):
             r = requests.get(url2)
             open(fileName,'wb').write(r.content)
             print("Downloaded " + fileName)
-        except Exception:
+        except Exception as e:
             fileName = os.getcwd() + '\\APKs\\apktada\\'+ "errors.txt"
             errorMessage = "\n" + appID_trimmed + " could not download" + format(e)
             open(fileName,'a').write(errorMessage)
@@ -113,7 +157,7 @@ def downloadApkfab(db,table):
             r = requests.get(url2)
             open(fileName,'wb').write(r.content)
             print("Downloaded " + fileName)
-        except Exception:
+        except Exception as e:
             fileName = os.getcwd() + '\\APKs\\apkfab\\'+ "errors.txt"
             errorMessage = "\n" + appID_trimmed + " could not download" + format(e)
             open(fileName,'a').write(errorMessage)
@@ -146,20 +190,89 @@ def downloadApkgk(db,table):
             print(appID_trimmed+ " could not be downloaded")
             continue
 
+def downloadTencent(db,table):
+    count = 0
+    for row in db[table]:
+        try:
+            downloadUrl = str(row["appURL"])
+            appID = str(row["appID"])
+            fileName = os.getcwd() + '\\APKs\\tencent\\'+ appID + '.apk'
+            #headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            if os.path.exists(fileName):
+                print(appID + " already downloaded. Skipping..")
+                count += 1
+                continue
+            r = requests.get(downloadUrl, stream = True)
+            with open(fileName, 'wb' ) as f:
+                for chunk in r.iter_content( chunk_size = 1024 ):
+                    if chunk: # filter out keep-alive new chunks
+                        f.write( chunk )
+            # open(fileName,'wb').write(r.content)
+            # open(fileName).close()
+            print("Downloaded "+fileName)
+            count += 1
+            if count == 500:
+                break
+        except Exception as e:
+            fileName = os.getcwd() + '\\APKs\\tencent\\'+ "errors.txt"
+            errorMessage = "\n" + appID + " could not download" + format(e)
+            open(fileName,'a').write(errorMessage)
+            open(fileName).close()
+            print(appID + " could not be downloaded")
+            continue
+
+def downloadStore360(db,table):
+    count = 0
+    for row in db[table]:
+        try:
+            downloadUrl = str(row["downloadURL"])
+            appName = str(row["appName"])
+            fileName = os.getcwd() + '\\APKs\\Store360\\'+ appName + '.apk'
+            #headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            if os.path.exists(fileName):
+                print(appName + " already downloaded. Skipping..")
+                count += 1
+                continue
+            r = requests.get(downloadUrl, stream = True)
+            with open(fileName, 'wb' ) as f:
+                for chunk in r.iter_content( chunk_size = 1024 ):
+                    if chunk: # filter out keep-alive new chunks
+                        f.write( chunk )
+            # open(fileName,'wb').write(r.content)
+            # open(fileName).close()
+            print("Downloaded "+fileName)
+            count += 1
+            if count == 500:
+                break
+        except Exception as e:
+            fileName = os.getcwd() + '\\APKs\\Store360\\'+ "errors.txt"
+            errorMessage = "\n" + appName + " could not download" + format(e)
+            open(fileName,'a').write(errorMessage)
+            open(fileName).close()
+            print(appName + " could not be downloaded")
+            continue
 
 if __name__ == '__main__':
-    path = os.getcwd() + '\\DB\\'
-    db = databaseStartUp("sqlite:///" + path + "apkpure.db")
-    downloadApkpure(db,"appDetails")
+    # path = os.getcwd() + '\\DB\\'
+    # db = databaseStartUp("sqlite:///" + path + "apkpure.db")
+    # downloadApkpure(db,"appDetails")
 
-    db = databaseStartUp("sqlite:///" + path + "apkplz.db")
-    downloadApkplz(db,"appDetails")
+    # db = databaseStartUp("sqlite:///" + path + "apkplz.db")
+    # downloadApkplz(db,"appDetails")
 
-    db=databaseStartUp("sqlite:///" + path + "apktada.db")
-    downloadApktada(db,"appDetails")
+    # db=databaseStartUp("sqlite:///" + path + "apktada.db")
+    # downloadApktada(db,"appDetails")
 
-    db=databaseStartUp("sqlite:///" + path + "apkfab.db")
-    downloadApkfab(db,"appDetails")
+    # db=databaseStartUp("sqlite:///" + path + "apkfab.db")
+    # downloadApkfab(db,"appDetails")
 
-    db=databaseStartUp("sqlite:///" + path + "apkgk_database.db")
-    downloadApkgk(db,"appDetails")
+    # db=databaseStartUp("sqlite:///" + path + "apkgk_database.db")
+    # downloadApkgk(db,"appDetails")
+
+    # db = databaseStartUp("sqlite:///" + "cn_database.db")
+    # downloadTencent(db, "appDetailsChinese")
+
+    db = databaseStartUp("sqlite:///" + "cn_database2.db")
+    downloadStore360(db, "appDetailsChinese")
+
+    #downloadApksFromCSV('Apk_list.csv')

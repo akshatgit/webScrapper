@@ -5,6 +5,7 @@ env/*
 gcloud*.json
 test.py
 cn_database.db
+cn_database2.db
 =======
 gcloud*.json
 >>>>>>> parent of d69ecdb... no change

@@ -120,7 +120,4 @@ def chinese_list():
         print(count, cn_list[i])
     
     with open('./cn/terms.yml', 'w') as outfile:
-        yaml.dump(cn_list, outfile, sort_keys=False)    
-    
-    
-test_translation()
+        yaml.dump(cn_list, outfile, sort_keys=False)
