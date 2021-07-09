@@ -1,7 +1,7 @@
 import csv
 import yaml
 from queue import Queue
-from google.cloud import translate_v2 as translate
+#from google.cloud import translate_v2 as translate
 
 def commaSeparated(term):
     result = ""

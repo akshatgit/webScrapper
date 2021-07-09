@@ -20,6 +20,79 @@ def getTitleForAppID(dataframe, appID):
     title = title.replace(' ','-').lower()
     return title
 
+def downloadFromApkPlz(appID,outputDirectory):
+    try:
+        fileName = os.path.abspath(outputDirectory) + '/' + appID+ '.apk'
+        if os.path.exists(fileName):
+            print(appID + " is already downloaded at " + fileName)
+            return True
+        url1 = "https://apkplz.net/download-app/" + appID
+        r1 = requests.get(url1)
+        soup = BeautifulSoup(r1.text, 'lxml')
+        #look for 'dllink' within all script tags, strip out the value of the variable using substrings
+        download_url_untrimmed = re.search(r'dllink\s*=\s*(.*?);', str(soup.find_all('script')), flags=re.DOTALL).group(0)
+        url2 = download_url_untrimmed.split("\"")[1]
+        r = requests.get(url2)
+        print("Sending request to " + url2)
+        open(fileName,'wb').write(r.content)
+        print("Downloaded " + fileName)
+        return True
+    except Exception as e:
+        print(appID + " could not be downloaded from ApkPlz")
+        return False
+
+def downloadFromApkGk(appID,outputDirectory):
+    try:
+        #Avoid re-download of duplicates
+        fileName = os.path.abspath(outputDirectory) + '/' + appID+ '.apk'
+        if os.path.exists(fileName):
+            print(appID + " is already downloaded at " + fileName)
+            return True
+        url1 = "https://apkgk.com/" + appID + "/download"
+        r = requests.get(url1)
+        soup = BeautifulSoup(r.text,'lxml')
+        url2 = "https:"+str(soup.find("a",class_="btn btn-cus btn-down")["href"])
+        r = requests.get(url2)
+        print("Sending request to " + url2)
+        open(fileName,'wb').write(r.content)
+        print("Downloaded "+fileName)
+        return True
+    except Exception as e:
+        print(appID + " could not be downloaded from ApkGk")
+        return False
+
+def downloadFromApkTada(appID, outputDirectory):
+    try:
+        fileName = os.path.abspath(outputDirectory) + '/' + appID+ '.apk'
+        if os.path.exists(fileName):
+            print(appID + " is already downloaded at " + fileName)
+            return True
+        #Download URL 1
+        url1 = "https://apktada.com/download-apk/" + appID
+        r1 = requests.get(url1)
+        soup = BeautifulSoup(r1.text, 'lxml')
+        #look for 'dllink' within all script tags, strip out the value of the variable using substrings
+        download_url_untrimmed = re.search(r'dllink\s*=\s*(.*?);', str(soup.find_all('script')), flags=re.DOTALL).group(0)
+        url2 = download_url_untrimmed.split("\"")[1]
+        r = requests.get(url2)
+        print("Sending request to " + url2)
+        open(fileName,'wb').write(r.content)
+        print("Downloaded " + fileName)
+        return True
+    except Exception as e:
+        print(appID + " could not be downloaded from ApkTada")
+        return False
+
+def downloadByAppID(appID,outputDirectory):
+    if not downloadFromApkPlz(appID,outputDirectory):
+        if not downloadFromApkGk(appID,outputDirectory):
+            downloadFromApkTada(appID,outputDirectory)
+
+def getAppIDsFromCSV(fileName, column_name):
+    df = pd.read_csv(fileName, usecols = [column_name])
+    appIDs = [x for x in df[column_name].tolist() if str(x) != 'nan']
+    return appIDs
+
 def downloadApksFromCSV(fileName):
     df = pd.read_csv(fileName, usecols = ['AppID','Title'])
     appIDs = df.AppID
@@ -272,7 +345,9 @@ if __name__ == '__main__':
     # db = databaseStartUp("sqlite:///" + "cn_database.db")
     # downloadTencent(db, "appDetailsChinese")
 
-    db = databaseStartUp("sqlite:///" + "cn_database2.db")
-    downloadStore360(db, "appDetailsChinese")
+    # db = databaseStartUp("sqlite:///" + "cn_database2.db")
+    # downloadStore360(db, "appDetailsChinese")
 
     #downloadApksFromCSV('Apk_list.csv')
+    for appID in getAppIDsFromCSV("/Users/adil/Documents/IPV/Labled apps/250_en_sample.csv","appId"):
+        downloadByAppID(appID,"/Users/adil/Documents/IPV/APKs/testcorpus")
